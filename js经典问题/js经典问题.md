@@ -166,7 +166,7 @@ index.html
 </script>
 ```
 输出：
-![img](https://github.com/artianO-O/Web_note/blob/master/imgs\js\闭包.png)
+![img](../imgs/js/闭包.png)
 
 
 
@@ -176,14 +176,14 @@ index.html
 * 函数的prototype属性
   * 每个构造函数都有一个prototype属性, 它默认指向一个Object空对象(但object不满足)
   * 原型对象中有一个属性constructor, 它指向构造函数对象
-![img](https://github.com/artianO-O/Web_note/blob/master/imgs/js/显式原型.png)
+![img](../imgs/js/显式原型.png)
 
 ### 隐式原型
 * 每个构造函数function都有一个prototype，即显式原型
 * 每个实例对象都有一个__proto__，可称为隐式原型，所有函数都是Function的实例（包括Function）
 * 对象的隐式原型的值为其对应构造函数的显式原型的值
 * 内存结构(图)
-![img](https://github.com/artianO-O/Web_note/blob/master/imgs/js/显式原型与隐式原型.png)
+![img](../imgs/js/显式原型与隐式原型.png)
 * 总结:
   * 函数的prototype属性: 在定义函数时自动添加的, 默认值是一个空Object对象
   * 对象的__proto__属性: 创建对象时自动添加的, 默认值为构造函数的prototype属性值
@@ -198,13 +198,13 @@ index.html
     * Object的原型对象是原型链的尽头
   * 别名: 隐式原型链
   * 作用: 查找对象的属性(方法)
-![img](https://github.com/artianO-O/Web_note/blob/master/imgs/js/原型链.png)
+![img](../imgs/js/原型链.png)
 
 * 构造函数/原型/实体对象的关系(图解)
-![img](https://github.com/artianO-O/Web_note/blob/master/imgs/js/构造函数_原型_实例对象的关系.png)
+![img](../imgs/js/构造函数_原型_实例对象的关系.png)
 
 * 构造函数/原型/实体对象的关系2(图解)
-![img](https://github.com/artianO-O/Web_note/blob/master/imgs/js/构造函数_原型_实例对象的关系2.png)
+![img](../imgs/js/构造函数_原型_实例对象的关系2.png)
 
 ### 原型链属性
 * 读取对象的属性值时: 会自动到原型链中查找
