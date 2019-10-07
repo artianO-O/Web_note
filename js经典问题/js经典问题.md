@@ -1,5 +1,16 @@
 # js经典问题
 
+# 目录
+## 1.解释下JavaScript中this是如何工作的。
+## 2.js的事件循环机制
+## 3.闭包
+## 4.原型与原型链
+## 5.js的同步与异步
+## 6.作用域与作用域链
+## 7.执行上下文与执行上下文栈
+## 8.对象的创建模式
+
+
 ## 1.解释下JavaScript中this是如何工作的。
 this永远指向函数运行时所在的对象，而不是函数被创建时所在的对象。匿名函数或不处于任何对象中的函数指向window 。
 
@@ -240,6 +251,62 @@ index.html
 </script>
 ```
 
+### instanceof是如何判断的?
+  * 表达式: A instanceof B
+  * 如果B函数的显式原型对象在A对象的原型链上, 返回true, 否则返回false
+```javascript
+<script type="text/javascript">
+  console.log(Object instanceof Function)
+  console.log(Object instanceof Object)
+  console.log(Function instanceof Object)
+  console.log(Function instanceof Function)
+  function Foo() {}
+  console.log(Object instanceof  Foo);
+</script>
+```
+输出: true,true,true,true,false
+
+### 面试题
+```javascript
+<script type="text/javascript">
+  /*
+  测试题1
+   */
+  var A = function() {
+
+  }
+  A.prototype.n = 1
+  var b = new A()
+  A.prototype = {
+    n: 2,
+    m: 3
+  }
+  var c = new A()
+  console.log(b.n, b.m, c.n, c.m)
+
+  /*
+   测试题2
+   */
+  var F = function(){};
+  Object.prototype.a = function(){
+    console.log('a()')
+  };
+  Function.prototype.b = function(){
+    console.log('b()')
+  };
+  var f = new F();
+  f.a()
+  f.b()
+  F.a()
+  F.b()
+</script>
+```
+完整原型链图
+![image](../imgs/js/原型链全图.png)
+测试一：1, undefined, 2, 3
+
+测试二：a(), 报错, a(), b()
+
 
 ## 5.js的同步与异步
 
@@ -278,7 +345,7 @@ index.html
   * 再次执行2的相同操作, 直到全局作用域, 如果还找不到就抛出找不到的异常
 
 ### 面试题1
-```
+```javascript
 script type="text/javascript">
   /*
    问题: 结果输出多少?
@@ -297,7 +364,7 @@ script type="text/javascript">
 输出:10
 
 ### 面试题2
-```
+```javascript
 <script type="text/javascript">
   /*
    说说它们的输出情况
@@ -319,5 +386,360 @@ script type="text/javascript">
 输出：
 ![img](../imgs/js/作用域与作用域链.png)
 
+## 7.执行上下文与执行上下文栈
+简析：逐行执行程序之前，会进行一个全局和函数都会进行数据预处理
+
+### 变量提升与函数提升
+* 变量声明提升
+  * 通过var定义(声明)的变量, 在定义语句之前就可以访问到
+  * 值: undefined
+* 函数声明提升
+  * 通过function声明的函数, 在之前就可以直接调用
+  * 值: 函数定义(对象)
+
+### 面试题
+```javascript
+<script type="text/javascript">
+  /*
+   面试题: 输出什么?
+   */
+  var a = 4
+  function fn () {
+    // 变量提升,相当于
+    // var a;
+    // console.log(a)
+    // var a = 5
+    console.log(a)
+    var a = 5
+  }
+  fn()
 
 
+  /*变量提升*/
+  console.log(a1) //可以访问, 但值是undefined
+  /*函数提升*/
+  a2() // 可以直接调用
+
+  var a1 = 3
+  function a2() {
+    console.log('a2()')
+  }
+</script>
+```
+输出: undefined
+
+### 执行上下文
+* 代码分类(位置)
+  * 全局代码
+  * 函数代码
+* 全局执行上下文
+  * 在执行全局代码前将window确定为全局执行上下文
+  * 对全局数据进行预处理
+    * var定义的全局变量==>undefined, 添加为window的属性
+    * function声明的全局函数==>赋值(fun), 添加为window的方法
+    * this==>赋值(window)
+  * 开始执行全局代码
+* 函数执行上下文
+  * 在调用函数, 准备执行函数体之前, 创建对应的函数执行上下文对象
+  * 对局部数据进行预处理
+    * 形参变量==>赋值(实参)==>添加为执行上下文的属性
+    * arguments==>赋值(实参列表), 添加为执行上下文的属性
+    * var定义的局部变量==>undefined, 添加为执行上下文的属性
+    * function声明的函数 ==>赋值(fun), 添加为执行上下文的方法
+    * this==>赋值(调用函数的对象)
+  * 开始执行函数体代码
+
+### 执行上下文栈
+1. 在全局代码执行前, JS引擎就会创建一个栈来存储管理所有的执行上下文对象
+2. 在全局执行上下文(window)确定后, 将其添加到栈中(压栈)
+3. 在函数执行上下文创建后, 将其添加到栈中(压栈)
+4. 在当前函数执行完后,将栈顶的对象移除(出栈)
+5. 当所有的代码执行完后, 栈中只剩下window
+
+![image](../imgs/js/执行上下文栈1.png)
+
+![image](../imgs/js/执行上下文栈2.png)
+
+例题：
+![image](../imgs/js/执行上下文栈例题.png)
+
+在执行递归调用时，foo()方法的产生多个执行上下文，以次压栈
+
+
+### 面试题
+```javascript
+<script type="text/javascript">
+  /*
+  测试题1: 先预处理变量, 后预处理函数
+  */
+  function a() {}
+  var a;
+  console.log(typeof a)
+
+
+  /*
+  测试题2: 变量预处理, in操作符
+   */
+  if (!(b in window)) {
+    var b = 1;
+  }
+  console.log(b)
+
+  /*
+  测试题3: 预处理, 顺序执行
+   */
+  var c = 1
+  function c(c) {
+    console.log(c)
+    var c = 3
+  }
+  c(2)
+
+  /*相当于
+  var c;
+   function c(c) {
+    console.log(c)
+    var c = 3
+  }
+  c = 1;
+  c(2);
+  */
+</script>
+```
+输出：function, undefined, 报错
+
+
+## 对象的创建模式
+### 方式一: Object构造函数模式
+  * 套路: 先创建空Object对象, 再动态添加属性/方法
+  * 适用场景: 起始时不确定对象内部数据
+  * 问题: 语句太多
+```javascript
+<script type="text/javascript">
+  /*
+  一个人: name:"Tom", age: 12
+   */
+  var p = new Object()
+  p = {}
+  p.name = 'Tom'
+  p.age = 12
+  p.setName = function (name) {
+    this.name = name
+  }
+  p.setaAge = function (age) {
+    this.age = age
+  }
+
+  console.log(p)
+</script>
+```
+
+### 方式二: 对象字面量模式
+  * 套路: 使用{}创建对象, 同时指定属性/方法
+  * 适用场景: 起始时对象内部数据是确定的
+  * 问题: 如果创建多个对象, 有重复代码
+```javascript
+<script type="text/javascript">
+  var p = {
+    name: 'Tom',
+    age: 23,
+    setName: function (name) {
+      this.name = name
+    }
+  }
+  console.log(p.name, p.age)
+  p.setName('JACK')
+  console.log(p.name, p.age)
+
+  var p2 = {
+    name: 'BOB',
+    age: 24,
+    setName: function (name) {
+      this.name = name
+    }
+  }
+</script>
+```
+
+### 方式三: 工厂模式
+  * 套路: 通过工厂函数动态创建对象并返回
+  * 适用场景: 需要创建多个对象
+  * 问题: 对象没有一个具体的类型, 都是Object类型
+
+```javascript
+<script type="text/javascript">
+  // 工厂函数: 返回一个需要的数据的函数
+  function createPerson(name, age) {
+    var p = {
+      name: name,
+      age: age,
+      setName: function (name) {
+        this.name = name
+      }
+    }
+    return p
+  }
+
+  var p1 = createPerson('Tom', 12)
+  var p2 = createPerson('JAck', 13)
+  console.log(p1)
+  console.log(p2)
+</script>
+```
+### 方式四: 自定义构造函数模式
+  * 套路: 自定义构造函数, 通过new创建对象
+  * 适用场景: 需要创建多个类型确定的对象
+  * 问题: 每个对象都有相同的数据, 浪费内存
+
+```javascript
+<script type="text/javascript">
+
+  function Person(name, age) {
+    this.name = name
+    this.age = age
+    this.setName = function (name) {
+      this.name = name
+    }
+  }
+
+  var p1 = new Person('Tom', 12)
+  var p2 = new Person('Tom2', 13)
+  console.log(p1, p1 instanceof Person)
+</script>
+```
+
+### 方式五: 构造函数+原型的组合模式
+  * 套路: 自定义构造函数, 属性在函数中初始化, 方法添加到原型上
+  * 适用场景: 需要创建多个类型确定的对象
+
+```javascript
+<script type="text/javascript">
+  function Person (name, age) {
+    this.name = name
+    this.age = age
+  }
+  Person.prototype.setName = function (name) {
+    this.name = name
+  }
+  var p1 = new Person('Tom', 12)
+  var p2 = new Person('JAck', 23)
+  p1.setName('TOM3')
+  console.log(p1)
+
+  Person.prototype.setAge = function (age) {
+    this.age = age
+  }
+  p1.setAge(23)
+  console.log(p1.age)
+
+  Person.prototype = {}
+  p1.setAge(34)
+  console.log(p1)
+  var p3 = new Person('BOB', 12)
+  p3.setAge(12)
+</script>
+```
+
+## 9.继承模式
+### 方式1：原型链继承
+简析：将父类型的实例对象赋值给子类型的原型属性
+* 套路
+  * 定义父类型构造函数
+  * 给父类型的原型添加方法
+  * 定义子类型的构造函数
+  * 创建父类型的对象赋值给子类型的原型
+  * 将子类型原型的构造属性设置为子类型
+  * 给子类型原型添加方法
+  * 创建子类型的对象: 可以调用父类型的方法
+* 关键
+  * 子类型的原型为父类型的一个实例对象
+```javascript
+<script type="text/javascript">
+
+  function Supper() { //父类型
+    this.superProp = 'The super prop'
+  }
+  //原型的数据所有的实例对象都可见
+  Supper.prototype.showSupperProp = function () {
+    console.log(this.superProp)
+  }
+
+  function Sub() { //子类型
+    this.subProp = 'The sub prop'
+  }
+
+  // 子类的原型为父类的实例
+  Sub.prototype = new Supper()
+  // 修正Sub.prototype.constructor为Sub本身
+  Sub.prototype.constructor = Sub
+
+  Sub.prototype.showSubProp = function () {
+    console.log(this.subProp)
+  }
+
+  // 创建子类型的实例
+  var sub = new Sub()
+  // 调用父类型的方法
+  sub.showSubProp()
+  // 调用子类型的方法
+  sub.showSupperProp()
+</script>
+```
+
+![image](../imgs/js/原型链继承.png)
+
+### 方式2: 借用构造函数继承(假的)
+* 套路:
+  * 定义父类型构造函数
+  * 定义子类型构造函数
+  * 在子类型构造函数中调用父类型构造
+* 关键:
+  * 在子类型构造函数中通用super()调用父类型构造函数
+```javascript
+<script type="text/javascript">
+
+  function Person(name, age) {
+    this.name = name
+    this.age = age
+  }
+
+  function Student(name, age, price) {
+    Person.call(this, name, age)   // this.Person(name, age)
+    this.price = price
+  }
+
+  var s = new Student('Tom', 20, 12000)
+  console.log(s.name, s.age, s.price)
+</script>
+```
+
+### 方式3: 原型链+借用构造函数的组合继承(原型链继承方法，构造函数继承属性)
+1. 利用原型链实现对父类型对象的方法继承
+2. 利用call()借用父类型构建函数初始化相同属性
+```javascript
+<script type="text/javascript">
+  function Person(name, age) {
+    this.name = name
+    this.age = age
+  }
+  Person.prototype.setName = function (name) {
+    this.name = name
+  }
+
+  function Student(name, age, price) {
+    Person.call(this, name, age) //得到父类型的属性
+    this.price = price
+  }
+  Student.prototype = new Person()  //得到父类型的方法
+  Student.prototype.constructor = Student
+  Student.prototype.setPrice = function (price) {
+    this.price = price
+  }
+
+  var s = new Student('Tom', 12, 10000)
+  s.setPrice(11000)
+  s.setName('Bob')
+  console.log(s)
+  console.log(s.constructor)
+</script>
+```
