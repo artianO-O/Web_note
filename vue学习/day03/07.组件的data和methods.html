@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="../js/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    
+    <mycom2></mycom2>
+</div>
+<script>
+
+    // 方式二:
+    // 注意无论是哪个方式创建的组件，都只能有一个根标签元素
+    Vue.component('mycom2',{
+        template:"<div><span></span><h3>{{msg}}</h3></div>",
+        // 组件上的data必须是一个方法，而且必须要返回一个对象
+        // 调用方法和之前的一致
+        data:function(){
+            return {
+                msg:"这个是组件上的data"
+            }
+        }
+    })
+
+    var vm = new Vue({
+        el:'#app',
+        data:{
+        },
+        methods:{
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body>
+<div id="app">
+    <!--v-on绑定事件，缩写是“@”-->
+    <input type="button" value="按钮" @mouseover="show">
+    <p v-text="msg"></p>
+</div>
+<script>
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            msg:'这个可以有',
+            mytitle:'自定义按钮',
+        },
+//        在这里编写所有的方法
+        methods:{
+           show:function () {
+               alert("哈哈哈")
+           }
+        }
+    })
+</script>
+</body>
+</html>

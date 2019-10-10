@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <com1 @func="show"></com1>
+  </div>
+
+  <template id="tmp1">
+        <div>
+            <h3>这是子组件</h3>
+            <input type="button" value="点我传参" @click="myfunc">
+        </div>
+  </template>
+
+  <script>
+    // 创建 Vue 实例，得到 ViewModel
+    var vm = new Vue({
+      el: '#app',
+      data: {
+          sonmessage:{}
+      },
+      methods: {
+        //   将子组件传入的参数写入自身的data中
+          show(data){
+              this.sonmessage = data
+          }
+      },
+
+      components: {
+             com1: {
+          data() { 
+            return {
+                sonmessage:{
+                    name:"小头儿子",
+                    age:5
+                }  
+            }
+          },
+          template: '#tmp1',   
+          methods: {
+            myfunc(){
+                // $emit,调用组件中绑定的父组件函数，第一个参数 方法名 必选， 第二个参数，可以为子组件的数据 可选
+                this.$emit('func',this.sonmessage)
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

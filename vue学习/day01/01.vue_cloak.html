@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <style>
+        [v-cloak]{
+            display:none;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <input type="button" title="msg" value="按钮">
+    <!--使用v-cloak可以解决插值表达式闪烁问题-->
+    <p v-cloak>{{msg}}</p>
+    <h4 v-text="msg"></h4>
+    <!--默认 v-text是没有闪烁问题的-->
+    <!--v-text会覆盖元素中原本的内容，但是插值表达式，只会替换自己的这个占位符，不会把整个元素的-->
+    <!--内容清空-->
+    <div v-html="msg2"></div>
+    <!--v-html会将绑定的数据按html标签形式解析-->
+</div>
+
+<script>
+    var vm = new Vue({
+        el:'#app',
+        data:{msg:'Hello Vue!',
+        msg2:'<h3>大大卷</h3>'}
+    })
+</script>
+</body>
+</html>

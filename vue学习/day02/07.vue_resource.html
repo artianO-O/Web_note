@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="../js/vue.js"></script>
+    <script src="../js/vue-resource-1.3.4.js"></script>
+    <script>
+        function showInfo(data) {
+          console.log(data)
+        }
+      </script>
+</head>
+<body>
+<div id="app">
+    <input type="button" value="get请求" @click="getInfo">
+</div>
+<script>
+    var vm = new Vue({
+        el:'#app',
+        data:{
+        },
+        methods:{
+            //1.客户端页面定义方法，通过callback将方法名发送给后台，
+            //2.后台通过js脚本的方式将执行的方法和数据发送至前端
+            //3.前端将执行脚本
+            getInfo(){
+                this.$http.jsonp('http://127.0.0.1:3000/getscript?callback=showInfo').then(function (result) {
+            // 通过 result.body 拿到服务器返回的成功的数据
+            console.log(result)
+                })
+            }
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+<!--===================组件创建3(在vm控制范围内，调用注册组件名的标签，展示组件内容)======================== -->
+    <!-- ===================子向父传值3(子组件标签绑定父组件的方法 @func="show")======================== -->
+    <!-- ===================父向子传值1(子组件标签绑定父组件的数据 v-bind:parentmsg="msg")======================== -->
+    <com1 @func="show" v-bind:parentmsg="msg"></com1>
+  </div>
+
+  <!--===================组件创建2(组件要展示的内容，注意:只有一个根节点)======================== -->
+  <template id="tmp1">
+        <div>
+            <h3>这是子组件</h3>
+            <!-- ===================父向子传值3(调用父组件传来的数据，其实父组件的数据早已存储在子组件props数组中)======================== -->
+            <p>{{parentmsg}}</p>
+            <!-- ===================子向父传值2(按钮绑定事件)======================== -->
+            <input type="button" value="点我传参" @click="myfunc">
+        </div>
+  </template>
+
+  <script>
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        msg: '123 啊-父组件中的数据',
+          sonmessage:{}
+      },
+      methods: {
+        //===================子向父传值4(父组件编写方法给子组件调用，data为子组件传来的数据，此时可以赋值到自身的数据中，完成传值)========================
+          show(data){
+              this.sonmessage = data
+          }
+      },
+
+      components: {
+    // ===================组件创建1(在vm实例中注册组件，同时创建组件模板，组件中有自身的数据【需要返回一个对象】和方法)========================
+             com1: {
+          data() { 
+            return {
+                sonmessage:{
+                    name:"小头儿子",
+                    age:5
+                }  
+            }
+          },
+        //===================父向子传值2(子组件中props数组存储父组件的数据)========================
+          props: ['parentmsg'],
+          template: '#tmp1',   
+          methods: {
+    //===================子向父传值1(在子组件创建一个方法，emit触发绑定在标签的事件，同时第二个参数是自身的数据)========================   
+            myfunc(){
+                this.$emit('func',this.sonmessage)
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

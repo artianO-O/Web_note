@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="../js/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">添加品牌</h3>
+        </div>
+        <div class="panel-body form-inline">
+            <label>
+                Id:
+                <input type="text" class="form-control" v-model="id">
+            </label>
+            <label>
+                Name:
+                <input type="text" class="form-control" v-model="name">
+            </label>
+            <input type="button" value="添加" class="btn btn-primary" @click="add">
+            <label>
+                搜索关键字:
+                <input type="text" class="form-control" v-model="keywords" v-focus v-color="'red'">
+            </label>
+        </div>
+    </div>
+
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Ctime</th>
+                <th>Opration</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="item in search(keywords)" :key="item.id">
+                <td>{{item.id}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.ctime | dateformat('yyyy-mm-dd')}}</td>
+                <td><a href="#" @click.prevent="del(item.id)">删除</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="app2">
+    <p v-fontweight="800" v-fontsize="60" > 牛逼呀{{dt | dateformat('')}}</p>
+</div>
+
+<script>
+//=========================================================================================
+//自定义全局指令
+// 使用Vue.directive自定义指令 v-focus
+// 参数一：指令的名称，注意定义的时候不要在名称前加 V-，
+// 但是在调用时需要加V-focus
+// 参数二：是一个对象，对象内有一些指令的相关函数，这些函数只有在特定的时候才起作用
+    Vue.directive('focus',{
+        bind:function(el){
+            // 每当指令绑定到元素上的时候，会立即执行这个bind函数，只执行一次
+            // 注意：在每个函数的第一个参数，永远是el，表示被绑定了指令的那个元素，这个el参数，是一个原生的JS对象
+            // 在元素刚绑定了指令的时候，还没有插入到DOM中去，这时候，调用focus方法没有作用
+            // 因为，一个元素，只有插入DOM之后，才能获取焦点
+            // el.focus()
+        },
+        inserted:function(el){
+            // inserted表示元素插入到DOM中去的时候，会执行inserted函数【触发一次】
+            el.focus();
+        },
+        updated:function(el){
+            // 当VNode更新的时候，会执行updated，可能会触发多次 
+        }
+    }
+    )
+//=========================================================================================
+
+
+//=========================================================================================
+//自定义指令样式
+    Vue.directive('color',{
+        // 样式的修改可以在bind的时期进行，即内存中，但是js事件需要在inserted的时候才能修改。
+        // 第二个参数binding是一个对象，可以操作钩子函数的属性
+        bind:function(el,binding){
+            el.style.color = binding.value;
+        },
+        inserted:function(el){
+
+        },
+        updated:function(el){
+
+        }
+    })
+    // Vue.directive('fontsize', function(el, binding) {
+    //     el.style.fontSize = parseInt(binding.value) + 'px'
+    // })
+//=========================================================================================
+
+
+
+    Vue.filter('dateformat',function(datastr,arg){
+        // 根据给定字符串，转换成指定格式显示
+        var dt = new Date(datastr);
+
+        var y = dt.getFullYear();
+        // js中月份是从0开始，所以使用时都有+1
+        var m = dt.getMonth()+1;
+        var d = dt.getDate();
+        if(arg.toLowerCase() === 'yyyy-mm-dd'){
+            // ` 反撇号（模板字符串名），ES6引入了一种新型的字符串字面量语法
+            return `${y}-${m}-${d}`;
+        }else{
+            var hh = dt.getHours();
+            var mm = dt.getMinutes();
+            var ss = dt.getSeconds();
+            return `${y}-${m}-${d}  ${hh}:${mm}:${ss}`;
+        }
+        
+    })
+
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            id:'',
+            name:'',
+            keywords:'',
+            list:[
+                {id:1,name:"波罗斯",ctime:new Date()},
+                {id:2,name:"背心勇者",ctime:new Date()},
+            ]
+        },
+        methods:{
+            add(){
+                new_obj = {id:this.id,name:this.name,ctime:new Date()};
+                this.list.push(new_obj);
+            },
+            del(id){//根据索引来删除数组元素
+                //分析：
+                //1.如何根据id，找到要删除这一项的索引
+                //2.如果找到索引了，直接调用数组的splice方法
+               //方法一：查询返回index的方法findIndex
+//                var index = this.list.findIndex(item => {
+//                    if(item.id == id){
+//                        return true;
+//                        }
+//                        })
+//                this.list.splice(index,1)
+                //方法二：
+                this.list.some((item,i) => {
+                    if(item.id == id){
+                        this.list.splice(i,1);
+                        //在数组的some方法中，如果return true,就会立即终止这个数组的后续循环
+                        return true;
+                        }
+                })
+            },
+            // 搜索关键字功能
+            // 方法一：
+            // 该方法返回一个列表
+            // search(keywords){
+            //     // 数组遍历的方法foreach,filter,findIndex
+            //     return this.list.filter(item =>{
+            //         // 遇到字符串包含keywords的元素就进行返回
+            //         if(item.name.includes(keywords)){
+            //             return item;
+            //         }
+            //     })
+            // }
+            // 方法二：
+            search(keywords){//根据关键字，进行数据的搜索
+                var newList = []
+                this.list.forEach(item =>{
+                    if(item.name.indexOf(keywords) != -1){
+                        newList.push(item)
+                    }
+                })
+                return newList;
+            }
+        }
+    })
+
+
+
+    var vm2 = new Vue({
+        el:'#app2',
+        data:{
+            dt:new Date()
+        },
+        // 定义私有的过滤器，需要俩个元素，过滤器名和方法
+        filters:{
+            dateformat:function(datastr,arg){
+        // 根据给定字符串，转换成指定格式显示
+        var dt = new Date(datastr);
+
+        var y = dt.getFullYear();
+        // js中月份是从0开始，所以使用时都有+1
+        var m = dt.getMonth()+1;
+        var d = dt.getDate();
+        if(arg.toLowerCase() === 'yyyy-mm-dd'){
+            // ` 反撇号（模板字符串名），ES6引入了一种新型的字符串字面量语法
+            return `${y}-${m}-${d}`;
+        }else{
+            var hh = dt.getHours();
+            var mm = dt.getMinutes();
+            var ss = dt.getSeconds();
+            return `${y}-${m}-${d}  ${hh}:${mm}:${ss} 这是私有的过滤器`;
+                }
+        
+            }
+        },
+        //=========================================================================================
+        // 定义私有的指令
+        directives:{
+            'fontweight':{
+                bind:function(el,binding){
+                    el.style.fontWeight = binding.value;
+                } 
+            },
+            // 简写函数
+            // 就是默认在bind和update中各写一份此函数
+            'fontsize':function(el, binding) {
+            el.style.fontSize = parseInt(binding.value) + 'px'
+            }
+        }
+        //=========================================================================================
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body>
+<div id="app">
+    <!--使用v-bind将属性值解析成vm中的变量，“:”是简写形式-->
+    <!--v-bind中可以合法的使用js表达式-->
+    <input type="button" value="按钮" v-bind:title="mytitle + 123456">
+    <p v-text="msg"></p>
+</div>
+<script>
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            msg:'这个可以有',
+            mytitle:'自定义按钮',
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <!-- ===================路由创建1(导入对应的包)======================== -->
+  <script src="../js/vue.js"></script>
+  <script src="../js/vue-router-3.0.1.js"></script>
+  <style>
+    .router-link-active,
+    .myactive {
+      color: red;
+      font-size: 30px;
+    }
+    /* ===================动画创建2(为指定时间添加状态)======================== */
+    .v-enter,
+    .v-leave-to {
+      opacity: 0;
+      transform: translateX(140px);
+    }
+    .v-enter-active,
+    .v-leave-active {
+      transition: all 0.5s ease;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <!-- ===================路由创建4(路由对象的展示)======================== -->
+    <router-link to="/login" tag="span">登录</router-link>
+    <router-link to="/register">注册</router-link>
+    <!-- ===================动画创建1(transition标签包裹需操作对象)======================== -->
+    <transition mode="out-in">
+      <router-view></router-view>
+    </transition>
+  </div>
+
+  <!-- ===================组件模板创建2(编写组件模板试图内容)======================== -->
+  <template id="tmp1">
+    <div>
+      <h3>我是登陆组件</h3>
+    </div>
+  </template>
+  <template id="tmp2">
+    <div>
+      <h3>我是注册组件</h3>
+    </div>
+  </template>
+
+  <script>
+    // ===================组件模板创建1(创建组件模板)========================
+    var login = {
+      template: '#tmp1'
+    }
+    var register = {
+      template: '#tmp2'
+    }
+    // ===================路由创建2(创建路由对象，为模板对象指定路径)========================
+    var routerObj = new VueRouter({
+      routes: [
+        { path: '/', redirect: '/login' }, 
+        { path: '/login', component: login },
+        { path: '/register', component: register }
+      ],
+      linkActiveClass: 'myactive'
+    })
+
+    var vm = new Vue({
+      el: '#app',
+      data: {},
+      methods: {},
+      // ===================路由创建3(路由对象与vm实例进行关联)========================
+      router: routerObj
+    });
+  </script>
+</body>
+
+</html>

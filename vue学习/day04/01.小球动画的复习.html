@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../js/vue.js"></script>
+  <!-- 2. 自定义两组样式，来控制 transition 内部的元素实现动画 -->
+  <style>
+      .ball{
+          width: 15px;
+          height: 15px;
+          border-radius: 50%;
+          background: red;
+      }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <input type="button" value="toggle" @click="flag=!flag">
+    <transition @before-enter="beforeEnter"
+    @enter="enter"
+    @after-enter="afterEnter">
+        <!-- 在小球身上定义方法来控制函数 -->
+        <div class="ball" v-show="flag">
+        </div>
+    </transition>
+  </div>
+
+  <script>
+    // 创建 Vue 实例，得到 ViewModel
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        flag: false
+      },
+      methods: {
+        //   beforeEnter表示动画开场前的状态,el表示要操作动画的DOM元素
+        beforeEnter(el){
+            el.style.transform = "translate(0, 0)"
+        },enter(el,done){
+            // 这句话没有实际作用，可以强制刷新网页
+            el.offsetWidth
+          // enter 表示动画 开始之后的样式，这里，可以设置小球完成动画之后的，结束状态
+          el.style.transform = "translate(150px, 450px)"
+          el.style.transition = 'all 1s ease'
+        // 这里的 done， 起始就是 afterEnter 这个函数，也就是说：done 是 afterEnter 函数的引用
+          done()
+        },afterEnter(el){
+            // 这句话的第一个功能是控制小球的显示与隐藏
+            // 第二个功能是跳过后半场动画，让flag标识直接变为false
+            // 当第二次按按钮时，flag false -> true
+          this.flag = !this.flag
+        //   Vue利用钩子函数把动画分为两部分
+        //  我们使用flag标识符，表示动画的切换
+        // flag false -> true  true -> false
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

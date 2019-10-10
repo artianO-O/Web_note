@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="../js/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <!-- 分析：
+        过滤器第一个参数为 “|”管道符前的数据，
+        处理完后返回另一数据，不改变原来的数据
+        可以多个一个使用，按从左到右的执行顺序，
+        前一过滤器返回的数据交给后面的过滤器
+    -->
+    <p>{{msg | msgfilter("飞机")}}</p>
+</div>
+<script>
+    // 过滤器的使用 | 
+    Vue.filter('msgfilter',function(msg,arg){
+        return msg.replace(/山/g,arg);
+    })
+
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            msg:'从前有座山，山上有座庙，庙里有个山，山头有个小和尚'
+        },
+        methods:{
+        }
+    })
+</script>
+</body>
+</html>

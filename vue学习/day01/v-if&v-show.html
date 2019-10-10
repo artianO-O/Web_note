@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body>
+<!--v-if的特点：每次都会重新删除或创建元素-->
+<!--v-show 的特点：每次不会重新进行DoM的删除和创建操作，只是切换了元素的 display:none 样式-->
+<!--v-if 有较高的切换性能消耗-->
+<!--v-show 有较高的初始渲染消耗-->
+
+<!--如果元素涉及到频繁的切换，最好不要使用v-if -->
+<!--如果元素可能永远也不会被显示出来被用户看到，则推荐使用v-if-->
+<div id="app">
+    <input type="button" value="切换" @click="flag=!flag">
+    <p v-if="flag">山重水复疑无路</p>
+    <p v-show="flag">柳暗花明又一村</p>
+</div>
+<script>
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            flag:true,
+        },
+        methods:{
+        }
+    })
+</script>
+</body>
+</html>

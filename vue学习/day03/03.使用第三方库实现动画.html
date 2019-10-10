@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../js/vue.js"></script>
+  <link rel="stylesheet" href="../css/animate.css">
+    <style>
+        /* 自定义过渡类名，默认值为：v- */
+        /* .my-enter,.my-leave-to{
+            opacity: 0;
+            transform: translateX(150px);
+        }
+        .my-enter-active,.my-leave-active{
+            transition: all 0.8s ease;
+        } */
+    </style>
+</head>
+<body>
+  <div id="app">
+    <input type="button" value="toggle" @click="flag=!flag">
+    <!-- 需求： 点击按钮，让 h3 显示，再点击，让 h3 隐藏 -->
+    <!-- 使用第三方的css动画库，将库导入，enter-active-class改变进入时的动画，
+    leave-active-class改变离开时的动画 -->
+    <!-- 使用  :duration="{ enter: 200, leave: 400 }"  来分别设置 入场的时长 和 离场的时长  -->
+    <transition name="my" enter-active-class="animated wobble" 
+    leave-active-class="animated tada" :duration="{ enter: 200, leave: 400 }">
+        <h3 v-if="flag">这是一个H3</h3>
+    </transition>
+  </div>
+
+  <script>
+    // 创建 Vue 实例，得到 ViewModel
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        flag: false
+      },
+      methods: {}
+    });
+  </script>
+</body>
+
+</html>

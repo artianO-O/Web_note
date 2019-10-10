@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body>
+<!--v-bind通过数组的绑定多个样式-->
+<div id="app">
+    <h3 :style="[styobj1,styobj2]">我是大大的标题</h3>
+</div>
+<script>
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            styobj1:{color:'red','font-weight':200},
+            styobj2:{'font-size':'200px'}
+        },
+        methods:{
+        }
+    })
+</script>
+</body>
+</html>

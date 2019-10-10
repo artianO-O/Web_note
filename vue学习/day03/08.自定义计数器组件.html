@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="../js/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    
+    <mycom2></mycom2>
+    <hr>
+    <mycom2></mycom2>
+    <hr>
+    <mycom2></mycom2>
+    <hr>
+</div>
+<!-- 这里必须要用div标签包起来，如果要用到Vue的函数，必须以本地的端口去访问 -->
+    <template id="temp1">
+        <div>
+            <input type="button" value="add" @click="increment">
+            <p>{{count}}</p>
+        </div>
+    </template>    
+
+<script>
+
+    // 方式二:
+    // 注意无论是哪个方式创建的组件，都只能有一个根标签元素
+    Vue.component('mycom2',{
+        template:"#temp1",
+        // 组件上的data必须是一个方法，而且必须要返回一个对象
+        // 调用方法和之前的一致
+        data:function(){
+            return {
+                count:0
+            }
+        },
+        // 这个形式与普通的Vue方法一致
+        methods:{
+            increment() {
+                this.count++;
+            }
+        }
+    })
+
+    var vm = new Vue({
+        el:'#app',
+        data:{
+        },
+        methods:{
+        }
+    })
+</script>
+</body>
+</html>

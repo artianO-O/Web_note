@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body>
+<div id="app">
+    <input type="button" value="浪起来" @click="lang">
+    <input type="button" value="低调" @click="stop">
+    <h2 v-text="msg"></h2>
+</div>
+<script>
+    var vm = new Vue({
+        el:'#app',
+        data:{
+           msg:'猥琐发育，别浪！',
+           intervalId:null,
+        },
+        methods:{
+//            坑：这里使用ES6的语法虽然会报错，但是还是能执行
+            lang(){
+                if(this.intervalId!=null) return;
+                clearInterval(this.intervalId);
+                this.intervalId = setInterval(() => {
+//              这里的this指的是vm实例对象
+                    var start = this.msg.substring(0,1);
+                    var end = this.msg.substring(1);
+                    this.msg = end + start;
+                },400)
+            },
+            stop(){
+                clearInterval(this.intervalId);
+                this.intervalId = null;
+            }
+        }
+    })
+</script>
+<!--开启多个定时器，怎么只执行一个
+    方法一：开启定时器前，先关闭前面的定时器
+    方法二：如果定时器不为null则返回，在关闭定时器函数中，将定时器赋值为null
+-->
+<!--我的：
+    分析：
+    vm实例对象会监听自身data中的数据变化，一旦发生改变会重新渲染页面，这样程序员只关注
+    变量值就好了，而不用关心重新渲染页面的问题
+    1.获取msg的数据，用substring方法进行截取，将第一个字符截取拼接到最后面。
+    2.给“浪起来”按钮添加事件，定时执行一次数据拼接。
+-->
+<!--老师的：
+//分析：
+//1.给【浪起来】按钮，绑定一个点击事件 v-on @
+//2.在按钮的事件处理函数中，写相关的业务逻辑代码：拿到msg 字符串，然后调用字符串的
+substring 来进行字符串的截取操作，把第一个字符截取出来，放到最后一个位置即可；
+//3.为了实现点击下按钮，自动截取的功能，需要把2步骤中的代码，放到一个定时器中去；
+-->
+</body>
+</html>

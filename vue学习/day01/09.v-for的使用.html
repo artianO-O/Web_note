@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body>
+<!--v-for遍历数组-->
+<div id="app">
+    <p v-for="(item,i) in list">索引：{{i}}  数组元素：{{item}}</p>
+    <!--遍历对象是，第一个参数为value，第二个参数为key,第三个参数为索引-->
+    <p v-for="(value,key) in obj_list">索引：{{key}}  数组元素：{{value}}</p>
+</div>
+<script>
+    var vm = new Vue({
+        el:'#app',
+        data:{
+           list:[1,2,3,4,5,8,4],
+           obj_list:{
+               aj:"nuibi",
+               ck:"yenuibi",
+               xwk:"sunwukong"
+            }
+        },
+        methods:{
+        }
+    })
+</script>
+</body>
+</html>

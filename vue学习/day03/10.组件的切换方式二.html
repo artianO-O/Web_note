@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="../js/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <a href="" @click.prevent="comname='login'">登陆</a>
+    <a href="" @click.prevent="comname='register'">注册</a>
+    
+    <!-- :is指定显示组件的名称 -->
+    <!-- 组件的名称是字符串 -->
+    <component :is="comname"></component>
+    
+</div>
+<script>
+
+
+    Vue.component('login',{
+        template:'<h3>登陆组件</h3>'
+    })
+
+    Vue.component('register',{
+        template:'<h3>注册组件</h3>'
+    })
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            comname:'login'
+        },
+        methods:{
+        },
+    })
+    
+</script>
+</body>
+</html>

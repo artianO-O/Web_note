@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body>
+<div id="app">
+    <!--在事件行为click后面追加事件修饰符-->
+    <a href="http://www.baidu.com" @click.prevent.once="show">点我去百度</a>
+</div>
+<script>
+    var vm = new Vue({
+        el:'#app',
+        data:{
+        },
+        methods:{
+            show(){
+                alert("hahaha")
+            }
+        }
+    })
+</script>
+<!--知识点
+事件修饰符：
+.stop阻止冒泡
+.prevent 阻止默认事件
+.capture添加事件侦听器时使用事件捕获模式
+.self只当事件在该元素本身（比如不是子元素）触发时触发回调
+.once 事件只触发一次
+-->
+</body>
+</html>
